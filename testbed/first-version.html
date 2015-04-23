@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title></title>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/3.7.0/lodash.min.js"></script>
+  <script>
+  </script>
+  <style>
+  </style>
+</head>
+<body>
+ 
+ 
+ <script>
+ 
+   var AttrBuilder = function() {
+     _.bindAll(this);
+     this.cmds = [];
+     this.add.units = this.units;
+     this.currentUnits = '';
+   };
+   
+   _.extend(AttrBuilder.prototype, {
+     
+     setUnits: function(val) {
+       this.currentUnits = val;
+       return this;
+     },
+     
+     units: function(val){
+       this.cmds[this.cmds.length - 1].units = val;
+       return this;
+     },
+     
+     func: function() {
+       var args = _.toArray(arguments);
+
+       this.cmds.push({
+         type: 'function',
+         name: args[0],
+         values: _.rest(args),
+         units: this.currentUnits
+       });
+       
+       return this;
+     },
+     
+     add: function() {
+       var args = _(arguments).toArray().compact().value();
+       this.cmds.push({
+         type: 'value',
+         values: args,
+         units: this.currentUnits
+       });
+       
+       return this;
+     },
+     
+     val: function() {
+       var cmds = [], values;
+       
+       this.cmds.forEach(function(cmd) {
+         
+           if (cmd.type === 'function') {
+             if (_.indexOf(cmd.values, undefined) === -1) {
+               values = cmd.values.join(cmd.units + ',') + cmd.units;
+               cmds.push([ cmd.name, '(', values, ')' ].join(''));
+             }
+           } else {
+             values = cmd.values.join(cmd.units + ' ') + cmd.units;
+             cmds.push( values );
+           }
+
+       });
+       
+       return cmds.join(' ');
+     }
+     
+   });
+ 
+   var attrBuilder = function() {
+     var builder = new AttrBuilder();
+     return builder;
+   };
+   
+   
+   var s = attrBuilder()
+            .setUnits('px')
+            .add(10, 10, 10)
+            .setUnits('')
+            .func('scale', 1, 1)
+            .func('translate', 10, 10).units('px')
+            .val();
+   console.log(s);
+   
+   
+   var displayClass = function() {
+     return 'shown';
+   };
+   
+   var cursorClass = function() {
+     return undefined;
+   };
+   
+   
+   var classNames = attrBuilder()
+       .add(
+         'slide-object',
+         'slide-object-' + 'thing', 
+         displayClass(),
+         cursorClass(),
+         'zzz'
+       ).val();
+   
+   console.log('z', classNames);
+   
+   
+   
+   
+ </script> 
+</body>
+</html>
