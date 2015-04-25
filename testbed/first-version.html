@@ -89,6 +89,15 @@
      return builder;
    };
    
+   var attrBuilder2 = function() {
+    var builder = new AttrBuilder();
+    // we have arguments so default to using the `AttrBuilder.add` function
+    // and return `val()` (this is good for class definitions)
+    if (arguments.length > 0) {
+      return builder.add.apply(builder, arguments).val();
+    }
+    return builder;
+  };
    
    var s = attrBuilder()
             .setUnits('px')
@@ -120,6 +129,8 @@
        ).val();
    
    console.log('z', classNames);
+   
+   console.log(attrBuilder2('one', 'stupid' + 1, 'two', undefined, 'three'));
    
    
    

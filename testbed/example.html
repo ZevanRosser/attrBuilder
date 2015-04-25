@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title></title>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/3.7.0/lodash.min.js"></script>
+  <script src="../attr.js"></script>
+  <script>
+    window.addEventListener('load', function() {
+      var box = document.querySelector('.box'),
+          theta = 0;
+      
+      
+      var loop = function() {
+        var t = 200 + 200 * Math.sin(theta);
+        
+        box.style.transform = attr()
+          .translate(t, t).px()
+          .rotate(t).deg()
+          .scale(t / 200 + 1).val();
+        
+        box.style.boxShadow = attr()
+          .add(10, 10, 40).px()
+          .rgb(0, parseInt(t * 2), 0).val();
+        
+        theta += 0.05;
+        requestAnimationFrame(loop);
+      };
+      
+      loop();
+      
+    });
+  </script>
+  <style>
+    .box {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 50px;
+      height: 50px;
+      background: red; 
+    }
+  </style>
+</head>
+<body>
+  <div class="box"></div>
+</body>
+</html>
